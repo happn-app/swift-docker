@@ -34,7 +34,7 @@ treeish=${url_and_treeish##*=}
 # Previous way of parsing the arguments (working but not elegant, and not efficient)
 #url="$(cut -d= -f1 <<<"$url_and_treeish")"
 #treeish="$(cut -d= -f2 <<<"$url_and_treeish")"
-#if [ "$treeish" = "$url" ]; then treeish=; fi; # If there are no "=" in the string, cut will return the first object instead of an empty string…
+if [ "$treeish" = "$url" ]; then treeish=; fi; # If there are no "=" in the string, bash (or cut) will return the full string instead of an empty string…
 
 # Install the required build dependencies
 if [ -n "${1:-}" ]; then

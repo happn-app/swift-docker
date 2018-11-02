@@ -1,0 +1,33 @@
+---
+version: 1
+
+name: swiftlang-libs
+description: The runtime libs for Swift-compiled projects
+homepage: https://swift.org/
+
+maintainer: François Lamboley <francois.lamboley@happn.com>
+
+source:
+  url: None
+  arch-mapping:
+    amd64: amd64
+  strip: 1
+
+control:
+  depends:
+  - libatomic1
+  - libbsd0
+  - libcurl3
+  - libicu57
+  - libxml2
+  description: |
+    Swift projects depends on runtime libs that can be found in this package.
+  section: libs
+
+install:
+  recipe:
+  upstream:
+    /usr/local/swift:
+    - pattern: "lib/swift/linux/*.so"
+
+# vim: ts=2 sw=2 et

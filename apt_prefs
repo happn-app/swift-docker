@@ -1,0 +1,19 @@
+# ### Pin Debian Security and stable at 1000 to avoid using testing packages…
+Package: *
+Pin: release l=Debian-Security
+Pin-Priority: 1000
+
+Package: *
+Pin: release a=stable
+Pin-Priority: 1000
+
+Package: *
+Pin: release a=stretch-backports
+Pin-Priority: 999
+
+
+# ### But force SWIG to testing version
+
+Package: swig swig3.0
+Pin: release a=testing
+Pin-Priority: 1001

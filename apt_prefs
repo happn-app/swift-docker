@@ -1,6 +1,10 @@
-# ### Pin Debian Security and stable at 1000 to avoid using testing packages…
+# ### Pin Debian Security, stable-updates and stable at 1000 to avoid using testing packages…
 Package: *
 Pin: release l=Debian-Security
+Pin-Priority: 1000
+
+Package: *
+Pin: release a=stable-updates
 Pin-Priority: 1000
 
 Package: *

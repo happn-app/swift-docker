@@ -1,5 +1,5 @@
 # Supported Tags and Respective `Dockerfile` Links
-- `4.2`, `4.2.1`, `latest` — [Dockerfile](https://github.com/happn-tech/swift-docker/blob/f45ce1d69480207fb8833d27d0cad7e6ceb4fceb/Dockerfile)
+All tags uses this [Dockerfile](https://github.com/happn-tech/swift-docker/blob/master/Dockerfile).
 
 # Quick Reference
 ##### Where to File Issues

@@ -28,6 +28,6 @@ install:
   recipe:
   upstream:
     /usr/local/swift:
-    - pattern: "lib/swift/linux/*.so"
+    - pattern: "lib/swift/linux/*.so*"
 
 # vim: ts=2 sw=2 et

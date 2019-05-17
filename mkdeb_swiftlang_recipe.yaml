@@ -61,7 +61,7 @@ install:
   upstream:
     /usr/local/swift:
     - pattern: "*"
-      exclude: "lib/swift/linux/*.so"
+      exclude: "lib/swift/linux/*.so*"
 
 links:
   /usr/bin/swift: /usr/local/swift/bin/swift

@@ -5,7 +5,7 @@ LABEL description="Compiles and creates a package of Apple’s Swift programming
 # Exactly ONE of SWIFT_TAG and SWIFT_BRANCH must be set to a non-empty string
 # SWIFT_TAG must be set to a Swift tag, minus the "swift-" prefix
 ARG SWIFT_BRANCH
-ARG SWIFT_TAG=4.2.1-RELEASE
+ARG SWIFT_TAG=5.0.1-RELEASE
 ARG SWIFT_PRESET=buildbot_linux
 
 # Should be set to `dpkg --print-architecture`
@@ -180,6 +180,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   ca-certificates \
   git \
   ssh \
+# Swift repositories that have C dependencies work better with pkg-config
+  pkg-config \
 && rm -rf /var/lib/apt/lists/*
 # If we installed clang-6.0 from backport, we need to install the alternatives…
 #RUN update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-6.0 1000 && \

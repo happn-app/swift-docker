@@ -4,15 +4,15 @@ Pin: release l=Debian-Security
 Pin-Priority: 1000
 
 Package: *
-Pin: release a=stable-updates
+Pin: release n=stretch-updates
 Pin-Priority: 1000
 
 Package: *
-Pin: release a=stable
+Pin: release n=stretch
 Pin-Priority: 1000
 
 Package: *
-Pin: release a=stretch-backports
+Pin: release n=stretch-backports
 Pin-Priority: 999
 
 

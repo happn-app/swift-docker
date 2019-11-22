@@ -28,6 +28,15 @@ ENV SWIFTLANG_DEB_PATH="${OUTPUT_PATH}/${SWIFTLANG_DEB_NAME}.deb" \
 
 
 
+# Let’s make sure ptrac’ing any process from the user that launched it is
+# allowed (this is needed for lldb tests).
+# https://askubuntu.com/a/148882
+
+#RUN echo 0 | tee /proc/sys/kernel/yama/ptrace_scope
+RUN test "$(cat /proc/sys/kernel/yama/ptrace_scope)" = "0"
+
+
+
 RUN mkdir -p "${OUTPUT_PATH}"
 
 # Install packages. We install SWIG from testing because we need version 3.0.12.
@@ -92,14 +101,6 @@ RUN set -e && \
 
 
 
-# Let’s make sure ptrac’ing any process from the user that launched it is
-# allowed (this is needed for lldb tests).
-# https://askubuntu.com/a/148882
-
-RUN test "$(cat /proc/sys/kernel/yama/ptrace_scope)" = "0"
-#RUN echo 0 | tee /proc/sys/kernel/yama/ptrace_scope
-
-
 # All further operations are done as an arbitrary user named “swift”
 # (because one of Swift’s test fails if run as root)
 
@@ -113,7 +114,8 @@ WORKDIR "/tmp"
 RUN mkdir "swift-built" && mkdir "swift-source"
 WORKDIR "swift-source"
 RUN git clone --depth 1 --recursive "https://github.com/apple/swift.git"
-RUN ./swift/utils/update-checkout --skip-history --clone && \
+RUN git -C ./swift fetch --tags && git -C ./swift checkout ${SWIFT_TAG:+swift-}${SWIFT_TAG} ${SWIFT_BRANCH} && \
+    ./swift/utils/update-checkout --skip-history --clone && \
     ./swift/utils/update-checkout --skip-history ${SWIFT_TAG:+--tag} ${SWIFT_TAG:+swift-}${SWIFT_TAG} ${SWIFT_BRANCH:+--scheme} ${SWIFT_BRANCH}
 # Fix a bug where the resulting tarball would have a symlink to a file pointing
 # to the original source folder. Not sure why the bug happens (probably because

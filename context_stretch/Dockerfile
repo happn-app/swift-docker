@@ -31,6 +31,9 @@ ENV SWIFTLANG_DEB_PATH="${OUTPUT_PATH}/${SWIFTLANG_DEB_NAME}.deb" \
 # Let’s make sure ptrac’ing any process from the user that launched it is
 # allowed (this is needed for lldb tests).
 # https://askubuntu.com/a/148882
+# This does not detect all the tests problems though; you should make sure there
+# is an empty seccomp profile when building Swift via Docker, as described in
+# the Readme of this repo.
 
 #RUN echo 0 | tee /proc/sys/kernel/yama/ptrace_scope
 RUN test "$(cat /proc/sys/kernel/yama/ptrace_scope)" = "0"

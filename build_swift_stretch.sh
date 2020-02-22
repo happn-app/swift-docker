@@ -11,7 +11,7 @@ cd "$(dirname "$0")"
 test "$(grep CONFIG_SECCOMP= /boot/config-$(uname -r))" = "CONFIG_SECCOMP=y" || { echo "System does not support seccomp; cannot build Swift."; exit 1; }
 
 docker pull debian:stretch-slim
-docker build --build-arg SWIFT_TAG="$VERSION" -t "swift-builder:$VERSION" context_stretch
+docker build --build-arg SWIFT_TAG="$VERSION" -t "swift-builder:${VERSION}_operationqueue-patch" context_stretch
 
 echo
 echo

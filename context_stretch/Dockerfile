@@ -78,6 +78,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   swig \
   systemtap-sdt-dev \
   tzdata \
+  unzip \
   uuid-dev \
   vim \
 # To be able to clone the Swift repo & download stuff via https in general

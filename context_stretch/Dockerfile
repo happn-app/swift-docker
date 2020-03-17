@@ -75,7 +75,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   pkg-config \
   python3 \
   rsync \
-  swig \
+  swig3.0 \
   systemtap-sdt-dev \
   tzdata \
   unzip \

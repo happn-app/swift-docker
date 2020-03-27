@@ -50,9 +50,9 @@ RUN mkdir -p "${OUTPUT_PATH}"
 #    - Install clang-6.0 in the other image of this Dockerfile
 #    - Uncomment the update alternative RUN actions (in both images)
 #    - Update the swiftlang mkdeb recipe to have a dependency to clang-6.0
-COPY apt_prefs /etc/apt/preferences.d/pinning.pref
-COPY debian_testing.list /etc/apt/sources.list.d/debian_testing.list
-COPY debian_backports.list /etc/apt/sources.list.d/debian_backports.list
+#COPY apt_prefs /etc/apt/preferences.d/pinning.pref
+#COPY debian_testing.list /etc/apt/sources.list.d/debian_testing.list
+#COPY debian_backports.list /etc/apt/sources.list.d/debian_backports.list
 RUN apt-get update && apt-get install -y --no-install-recommends \
 # Swift compilation dependencies (vim is only for two libdispatch tests…)
   clang \
@@ -75,7 +75,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   pkg-config \
   python3 \
   rsync \
-  swig3.0 \
   systemtap-sdt-dev \
   tzdata \
   unzip \
@@ -85,11 +84,24 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   ca-certificates \
 # To install Go (to install mkdeb) from archive (the golang-go package is too old for our needs on Stretch)
   curl \
+# Because we compile swig from source…
+  automake \
+  bison \
+  byacc \
+  libpcre3-dev \
 && rm -rf /var/lib/apt/lists/*
 # We installed clang-6.0 from backport, we need to install the alternatives…
 #RUN update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-6.0 1000 && \
 #    update-alternatives --install /usr/bin/clang clang /usr/bin/clang-6.0 1000 && \
 #    update-alternatives --install /usr/bin/cc cc /usr/bin/clang-6.0 1000
+
+# Compile and install swig3.0.9 from source (cannot find a package version anymore)
+RUN git clone https://github.com/swig/swig.git && \
+    cd swig && \
+    git checkout rel-3.0.9 && \
+    ./autogen.sh && \
+    ./configure && \
+    make && make install
 
 # Install Go (to install mkdeb…)
 WORKDIR "/usr/local"

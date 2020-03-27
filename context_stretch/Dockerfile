@@ -95,10 +95,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 #    update-alternatives --install /usr/bin/clang clang /usr/bin/clang-6.0 1000 && \
 #    update-alternatives --install /usr/bin/cc cc /usr/bin/clang-6.0 1000
 
-# Compile and install swig3.0.9 from source (cannot find a package version anymore)
+# Compile and install swig3.0.12 from source (cannot find a package version anymore and 3.0.10 is not compatible w/ lldb)
 RUN git clone https://github.com/swig/swig.git && \
     cd swig && \
-    git checkout rel-3.0.9 && \
+    git checkout rel-3.0.12 && \
     ./autogen.sh && \
     ./configure && \
     make && make install

@@ -54,7 +54,7 @@ else
 	git merge || true; # If the repo is currently on a branch that has an upstream, merge it
 fi
 if [ -n "$treeish" ]; then
-	git fetch --tags
+	git fetch --tags -f
 	git checkout "$treeish"
 fi
 git submodule update --init --recursive

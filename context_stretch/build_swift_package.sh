@@ -59,8 +59,8 @@ if [ -n "$treeish" ]; then
 fi
 git submodule update --init --recursive
 
-# Compile the project
-swift build $static_option -c release --build-path "${BUILD_FOLDER_NAME}"
+# Compile the project using the Package.resolved versions of the dependencies
+swift build $static_option -c release --disable-automatic-resolution --build-path "${BUILD_FOLDER_NAME}"
 
 # Copying the Swift debs
 mkdir -p "${OUTPUT_PATH}/products/swift_debs"

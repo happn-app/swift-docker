@@ -213,4 +213,4 @@ RUN dpkg -i "./${SWIFTLANG_LIBS_DEB_NAME}.deb" "./${SWIFTLANG_DEB_NAME}.deb"
 COPY "build_swift_package.sh" "/usr/local/bin/build_swift_package.sh"
 
 WORKDIR "${OUTPUT_PATH}"
-ENTRYPOINT ["build_swift_package.sh"]
+CMD "/bin/bash"

@@ -3,7 +3,7 @@
 set -euo pipefail
 
 usage() {
-	echo "usage: $0 [--static] [--enable-automatic-resolution] git_url[=treeish_object] [build_dependency1, build_dependency2, ...]" >/dev/stderr
+	echo "usage: $0 [--static] [--disable-test-discovery] [--enable-automatic-resolution] git_url[=treeish_object] [build_dependency1, build_dependency2, ...]" >/dev/stderr
 	echo "note: The static option might not work on Linux." >/dev/stderr
 }
 
@@ -13,11 +13,15 @@ readonly BUILD_FOLDER_NAME=".build"
 
 # Parse the arguments
 static_option="--no-static-swift-stdlib"
+test_discovery_option="--enable-test-discovery"
 automatic_resolution_option="--disable-automatic-resolution"
 while [ $# -gt 0 ]; do
    case "$1" in
       --enable-automatic-resolution)
 			automatic_resolution_option=""
+      ;;
+      --disable-test-discovery)
+			test_discovery_option=""
       ;;
       --static)
 			static_option="--static-swift-stdlib"
@@ -72,7 +76,7 @@ fi
 git submodule update --init --recursive
 
 # Compile the project using the Package.resolved versions of the dependencies
-swift build $static_option -c release $automatic_resolution_option --build-path "${BUILD_FOLDER_NAME}"
+swift build $static_option $test_discovery_option $automatic_resolution_option -c release --build-path "${BUILD_FOLDER_NAME}"
 
 # Copying the Swift debs
 mkdir -p "${OUTPUT_PATH}/products/swift_debs"

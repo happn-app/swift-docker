@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -e
-readonly VERSION="${1:-5.1-RELEASE}"
+readonly VERSION="${1:-5.2.1-RELEASE}"
 
 cd "$(dirname "$0")"
 

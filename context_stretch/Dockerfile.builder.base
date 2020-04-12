@@ -1,0 +1,6 @@
+FROM __HPN_SWIFT_DOCKER_IMAGE_NAME__
+LABEL maintainer="François Lamboley <francois.lamboley@happn.com>"
+LABEL description="A docker image to compile a Swift project. Bind mount “${OUTPUT_PATH}” to retrieve the built project and the swiftlang-libs deb file."
+
+COPY "build_swift_package.sh" "/usr/local/bin/build_swift_package.sh"
+ENTRYPOINT ["build_swift_package.sh"]

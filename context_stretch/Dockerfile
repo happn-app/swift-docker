@@ -166,7 +166,7 @@ RUN mkdeb build --from "${SWIFT_ARCHIVE_OUTPUT_PATH}" --recipe "./swiftlang-libs
 FROM debian:stretch-slim AS swiftlang_compiler
 ARG OUTPUT_PATH=/mnt/output
 LABEL maintainer="François Lamboley <francois.lamboley@happn.com>"
-LABEL description="A docker image to compile a Swift project. Bind mount “${OUTPUT_PATH}” to retrieve the built project and the swiftlang-libs deb file."
+LABEL description="A docker image that contains the Swift compiler."
 
 # To match the previous image (did not find a way to reuse the variables…)
 ARG ARCH=amd64
@@ -209,8 +209,6 @@ WORKDIR "${DEBS_FOLDER}"
 COPY --from=swiftlang_builder "${SWIFTLANG_DEB_PATH}" ./
 COPY --from=swiftlang_builder "${SWIFTLANG_LIBS_DEB_PATH}" ./
 RUN dpkg -i "./${SWIFTLANG_LIBS_DEB_NAME}.deb" "./${SWIFTLANG_DEB_NAME}.deb"
-
-COPY "build_swift_package.sh" "/usr/local/bin/build_swift_package.sh"
 
 WORKDIR "${OUTPUT_PATH}"
 CMD "/bin/bash"

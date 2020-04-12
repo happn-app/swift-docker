@@ -3,9 +3,8 @@
 set -euo pipefail
 
 usage() {
-	echo "usage: $0 [--static] git_url[=treeish_object] [build_dependency1, build_dependency2, ...]" >/dev/stderr
+	echo "usage: $0 [--static] [--enable-automatic-resolution] git_url[=treeish_object] [build_dependency1, build_dependency2, ...]" >/dev/stderr
 	echo "note: The static option might not work on Linux." >/dev/stderr
-	exit 1
 }
 
 readonly REPO_FOLDER_NAME="built_repo"
@@ -13,18 +12,32 @@ readonly REPO_FOLDER_PATH="${OUTPUT_PATH}/${REPO_FOLDER_NAME}"
 readonly BUILD_FOLDER_NAME=".build"
 
 # Parse the arguments
-static=0
 static_option="--no-static-swift-stdlib"
-if [ "${1:-}" = "--static" ]; then
-	static=1
-	static_option="--static-swift-stdlib"
-	echo "warning: Statically linking the Swift stdlibs might not work on Linux." >/dev/stderr
-	shift
-fi
+automatic_resolution_option="--disable-automatic-resolution"
+while [ $# -gt 0 ]; do
+   case "$1" in
+      --enable-automatic-resolution)
+			automatic_resolution_option=""
+      ;;
+      --static)
+			static_option="--static-swift-stdlib"
+			echo "warning: Statically linking the Swift stdlibs might not work on Linux." >/dev/stderr
+      ;;
+      --help | -h | help)
+         usage
+         exit 0
+      ;;
+      *)
+			break
+      ;;
+   esac
+   shift
+done
 
 url_and_treeish="${1:-}"
 if [ -z "$url_and_treeish" ]; then
 	usage
+	exit 1
 fi
 shift
 
@@ -50,17 +63,16 @@ if [ ! -e "$REPO_FOLDER_PATH" ]; then
 else
 	# If the repo already exists, we assume it’s the one we want
 	cd "$REPO_FOLDER_PATH"
-	git remote update
+	git fetch --tags -f
 	git merge || true; # If the repo is currently on a branch that has an upstream, merge it
 fi
 if [ -n "$treeish" ]; then
-	git fetch --tags -f
 	git checkout "$treeish"
 fi
 git submodule update --init --recursive
 
 # Compile the project using the Package.resolved versions of the dependencies
-swift build $static_option -c release --disable-automatic-resolution --build-path "${BUILD_FOLDER_NAME}"
+swift build $static_option -c release $automatic_resolution_option --build-path "${BUILD_FOLDER_NAME}"
 
 # Copying the Swift debs
 mkdir -p "${OUTPUT_PATH}/products/swift_debs"

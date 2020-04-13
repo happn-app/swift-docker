@@ -42,21 +42,9 @@ RUN test "$(cat /proc/sys/kernel/yama/ptrace_scope)" = "0"
 
 RUN mkdir -p "${OUTPUT_PATH}"
 
-# Install packages. We install SWIG from testing because we need version 3.0.12.
-# If needed, we can install clang-6.0 instead of the default clang from stretch:
-# in some cases, when compiling master, I had a test (lane-release.llbuild) that
-# failed randomly. Compiling Swift with clang 6.0 (from backports) fixed it.
-# Other things to do when compiling Swift with clang 6.0:
-#    - Install clang-6.0 in the other image of this Dockerfile
-#    - Uncomment the update alternative RUN actions (in both images)
-#    - Update the swiftlang mkdeb recipe to have a dependency to clang-6.0
-#COPY apt_prefs /etc/apt/preferences.d/pinning.pref
-#COPY debian_testing.list /etc/apt/sources.list.d/debian_testing.list
-#COPY debian_backports.list /etc/apt/sources.list.d/debian_backports.list
 RUN apt-get update && apt-get install -y --no-install-recommends \
 # Swift compilation dependencies (vim is only for two libdispatch tests…)
   clang \
-# clang-6.0 \
   cmake \
   file \
   git \
@@ -90,10 +78,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   byacc \
   libpcre3-dev \
 && rm -rf /var/lib/apt/lists/*
-# We installed clang-6.0 from backport, we need to install the alternatives…
-#RUN update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-6.0 1000 && \
-#    update-alternatives --install /usr/bin/clang clang /usr/bin/clang-6.0 1000 && \
-#    update-alternatives --install /usr/bin/cc cc /usr/bin/clang-6.0 1000
 
 # Compile and install swig3.0.12 from source (cannot find a package version anymore and 3.0.10 is not compatible w/ lldb)
 RUN git clone https://github.com/swig/swig.git && \
@@ -155,7 +139,6 @@ COPY mkdeb_swiftlang_libs_recipe.yaml swiftlang-libs/recipe.yaml
 RUN mkdeb build --from "${SWIFT_ARCHIVE_OUTPUT_PATH}" --recipe "./swiftlang" --to "${SWIFTLANG_DEB_PATH}" swiftlang:${ARCH}=${SWIFT_VERSION}
 RUN mkdeb build --from "${SWIFT_ARCHIVE_OUTPUT_PATH}" --recipe "./swiftlang-libs" --to "${SWIFTLANG_LIBS_DEB_PATH}" swiftlang-libs:${ARCH}=${SWIFT_VERSION}
 
-#VOLUME "${OUTPUT_PATH}"
 #CMD ["echo", "Nothing to run. You can retrieve the built products in the volume of this image."]
 
 
@@ -183,12 +166,8 @@ ENV SWIFTLANG_DEB_PATH="${OUTPUT_PATH}/${SWIFTLANG_DEB_NAME}.deb" \
 ENV DEBS_FOLDER="/tmp/swift_debs"
 ENV OUTPUT_PATH="${OUTPUT_PATH}"
 
-# If Swift was compiled with clang 6.0, let’s install clang 6.0 here too for
-# consistency. Not sure it’s 100% needed though…
-COPY debian_backports.list /etc/apt/sources.list.d/debian_backports.list
 RUN apt-get update && apt-get install -y --no-install-recommends \
   clang \
-# clang-6.0 \
   libblocksruntime-dev \
   libcurl3 \
   libicu57 \
@@ -201,10 +180,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Swift repositories that have C dependencies work better with pkg-config
   pkg-config \
 && rm -rf /var/lib/apt/lists/*
-# If we installed clang-6.0 from backport, we need to install the alternatives…
-#RUN update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-6.0 1000 && \
-#    update-alternatives --install /usr/bin/clang clang /usr/bin/clang-6.0 1000 && \
-#    update-alternatives --install /usr/bin/cc cc /usr/bin/clang-6.0 1000
+
 WORKDIR "${DEBS_FOLDER}"
 COPY --from=swiftlang_builder "${SWIFTLANG_DEB_PATH}" ./
 COPY --from=swiftlang_builder "${SWIFTLANG_LIBS_DEB_PATH}" ./

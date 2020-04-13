@@ -18,14 +18,15 @@ The entry point of the image is a script that takes a git URL, a set of optional
 
 Example of use:
 ```bash
-docker run -v "$(pwd)/VaporBuild:/mnt/output" --rm -it happn/swift-builder https://github.com/vapor/vapor.git=master libssl1.0-dev zlib1g-dev pkg-config
+docker run -v "$(pwd)/VaporBuild:/mnt/output" --rm -it happn/swift-builder:5.2.1-RELEASE --enable-automatic-resolution https://github.com/vapor/vapor.git=4.0.1 libssl1.0-dev zlib1g-dev pkg-config
 #Point by point:
-#   docker run                                  Run docker
-#   -v "$(pwd)/VaporBuild:/mnt/output"          Mount /mnt/output in ./VaporBuild (in order to retrieve the built products)
-#   --rm -it                                    Remove the container after the build is complete, and attach with tty while running
-#   happn/swift-builder                         The image to run
-#   https://github.com/vapor/vapor.git=master   The URL of the project to build, with the branch/tag/commit to build (here master; optional)
-#   libssl1.0-dev zlib1g-dev pkg-config         The dependencies required to build the project
+#   docker run                                 Run docker
+#   -v "$(pwd)/VaporBuild:/mnt/output"         Mount /mnt/output in ./VaporBuild (in order to retrieve the built products)
+#   --rm -it                                   Remove the container after the build is complete, and attach with tty while running
+#   happn/swift-builder:5.2.1-RELEASE          The image to run
+#   --enable-automatic-resolution              Vapor does not include a Package.resolved file, so we have to enable automatic Package resolution
+#   https://github.com/vapor/vapor.git=4.0.1   The URL of the project to build, with the branch/tag/commit to build (here master; optional)
+#   libssl1.0-dev zlib1g-dev pkg-config        The dependencies required to build the project
 ```
 
 Usage:

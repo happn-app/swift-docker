@@ -12,7 +12,7 @@ test "$(grep CONFIG_SECCOMP= /boot/config-$(uname -r))" = "CONFIG_SECCOMP=y" || 
 
 docker pull debian:stretch-slim
 docker build --build-arg SWIFT_TAG="$VERSION" -t "swift:$VERSION" -f "context_stretch/Dockerfile" context_stretch
-cat context_stretch/Dockerfile.builder.base | sed -E "s/__HPN_SWIFT_DOCKER_IMAGE_NAME__/swift:$VERSION/g" | docker build -t "swift-builder:$VERSION" -f - .
+cat context_stretch/Dockerfile.builder.base | sed -E "s/__HPN_SWIFT_DOCKER_IMAGE_NAME__/swift:$VERSION/g" | docker build -t "swift-builder:$VERSION" -f - context_stretch
 
 echo
 echo

@@ -1,0 +1,14 @@
+diff --git a/context_stretch/Dockerfile b/context_stretch/Dockerfile
+index edd17f9..6f389a8 100644
+--- a/context_stretch/Dockerfile
++++ b/context_stretch/Dockerfile
+@@ -132,7 +132,8 @@ WORKDIR "swift-source"
+ RUN git clone --depth 1 --recursive "https://github.com/apple/swift.git"
+ RUN git -C ./swift fetch --tags && git -C ./swift checkout ${SWIFT_TAG:+swift-}${SWIFT_TAG} ${SWIFT_BRANCH} && \
+     ./swift/utils/update-checkout --skip-history --clone && \
+-    ./swift/utils/update-checkout --skip-history ${SWIFT_TAG:+--tag} ${SWIFT_TAG:+swift-}${SWIFT_TAG} ${SWIFT_BRANCH:+--scheme} ${SWIFT_BRANCH}
++    ./swift/utils/update-checkout --skip-history ${SWIFT_TAG:+--tag} ${SWIFT_TAG:+swift-}${SWIFT_TAG} ${SWIFT_BRANCH:+--scheme} ${SWIFT_BRANCH} && \
++    git -C ./swift-corelibs-foundation remote add frizlab https://github.com/Frizlab/swift-corelibs-foundation.git && git -C ./swift-corelibs-foundation fetch frizlab && git -C ./swift-corelibs-foundation checkout 5.1.5-RELEASE_fix-process-tests
+ # Fix a bug where the resulting tarball would have a symlink to a file pointing
+ # to the original source folder. Not sure why the bug happens (probably because
+ # cmake version is too old on Debian?). The fix creates the symlink **before**

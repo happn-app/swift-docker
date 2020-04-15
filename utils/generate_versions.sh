@@ -13,7 +13,7 @@ touch "$OUTPUT_FILE"
 
 
 readonly GCP_BASE_REGISTRY="$(cat "$HOME/.config/swift-docker/gcp-base-registry.txt")"
-test -n "$GCP_BASE_REGISTRY"
+test -n "$GCP_BASE_REGISTRY"; # readonly shadows the error, if any, so let’s check if we got a value…
 
 
 readonly GCR_REPOS=("$GCP_BASE_REGISTRY/swift" "$GCP_BASE_REGISTRY/swift-builder")
@@ -31,7 +31,7 @@ fi
 
 if [ "$SKIP_DOCKER_PULL" = "0" ]; then
 	readonly DOCKER_CREDS="$(cat "$HOME/.config/swift-docker/docker-creds.txt")"
-	test -n "$DOCKER_CREDS"
+	test -n "$DOCKER_CREDS"; # readonly shadows the error, if any, so let’s check if we got a value…
 	
 	for repo in "${DOCKER_REPOS[@]}"; do
 		DOCKER_ACCESS_TOKEN="$(curl -sL -H"Basic: $DOCKER_CREDS" \
@@ -49,7 +49,16 @@ if [ "$SKIP_DOCKER_PULL" = "0" ]; then
 fi
 
 
-echo "Digest,Repository,Tag" >>"$OUTPUT_FILE"
+echo "Digest,Repository,Tag,Swift Version,Cmd,Entrypoint" >>"$OUTPUT_FILE"
 for repo in "${DOCKER_REPOS[@]}" "${GCR_REPOS[@]}"; do
-	docker images --format "{{.Digest}},$repo,{{.Tag}}" "$repo" >>"$OUTPUT_FILE"
+	# We assume (and are pretty sure) the pipe character is invalid in a tag name
+	# and always will be.
+	for tag_and_digest in $(docker images --format "{{.Tag}}|{{.Digest}}" "$repo"); do
+		tag=${tag_and_digest%|*}
+		digest=${tag_and_digest##*|}
+		cmd="\"$(docker inspect "$repo:$tag" | jq -r ".[0].Config.Cmd"               | sed -E -e 's/"/""/g' -e 's/$/   /g' | tr -d '\n' | tr -d '\r')\""
+		version="\"$(docker run -it --rm --entrypoint swift "$repo:$tag" --version   | sed -E -e 's/"/""/g' -e 's/$/   /g' | tr -d '\n' | tr -d '\r')\""
+		entrypoint="\"$(docker inspect "$repo:$tag" | jq -r ".[0].Config.Entrypoint" | sed -E -e 's/"/""/g' -e 's/$/   /g' | tr -d '\n' | tr -d '\r')\""
+		echo "$digest,$repo,$tag,$version,$cmd,$entrypoint" >>"$OUTPUT_FILE"
+	done
 done

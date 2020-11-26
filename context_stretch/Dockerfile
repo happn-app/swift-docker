@@ -62,6 +62,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   ninja-build \
   pkg-config \
   python3 \
+  python-six \
   rsync \
   systemtap-sdt-dev \
   tzdata \

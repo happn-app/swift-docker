@@ -91,7 +91,7 @@ RUN git clone https://github.com/swig/swig.git && \
 # Install Go (to install mkdeb…)
 WORKDIR "/usr/local"
 RUN ["/bin/bash", "-c", "set -eo pipefail && \
-  curl -sSL https://dl.google.com/go/go1.12.linux-${ARCH}.tar.gz | tar xz && \
+  curl -sSL https://dl.google.com/go/go1.15.6.linux-${ARCH}.tar.gz | tar xz && \
   ln -s /usr/local/go/bin/go /usr/local/bin/go && \
   ln -s /usr/local/go/bin/gofmt /usr/local/bin/gofmt"]
 ENV GOROOT=/usr/local/go GOPATH=/usr/local/gohome GO111MODULE=on

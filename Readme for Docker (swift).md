@@ -1,16 +1,16 @@
 # Quick Reference
 ### `Dockerfile` Link
-https://github.com/happn-tech/swift-docker/blob/master/context_stretch/Dockerfile
+https://github.com/happn-app/swift-docker/blob/master/context_stretch/Dockerfile
 
 ### Where to File Issues
-https://github.com/happn-tech/swift-docker/issues
+https://github.com/happn-app/swift-docker/issues
 
 ### Maintained By
-[happn](https://github.com/happn-tech/)
+[happn](https://github.com/happn-app/)
 
 
 # What Is This Image?
-This image contains the Swift compiler for Debian Stretch. It is built by the [Dockerfile](https://github.com/happn-tech/swift-docker/blob/master/context_stretch/Dockerfile) in the [`context_stretch`](https://github.com/happn-tech/swift-docker/blob/master/context_stretch/) folder of [this GitHub repository](https://github.com/happn-tech/swift-docker).
+This image contains the Swift compiler for Debian Stretch. It is built by the [Dockerfile](https://github.com/happn-app/swift-docker/blob/master/context_stretch/Dockerfile) in the [`context_stretch`](https://github.com/happn-app/swift-docker/blob/master/context_stretch/) folder of [this GitHub repository](https://github.com/happn-app/swift-docker).
 
 ### Using the Compiled Files Outside of Docker
 The image contains a `.deb` file you can retrieve at path `$SWIFTLANG_LIBS_DEB_PATH`. The deb contains the Swift libs, against which all Swift executables are linked.
